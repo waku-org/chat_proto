@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package umbra.tagged_payload;
+
+// Specification: "../../specs/protocol_tags.md"
+
+
+// This message allows bytes on the wire to be tagged with the associated specification/type
+message TaggedPayload {
+	uint32 domain = 1;
+	uint32 tag = 2;
+	bytes payload_bytes = 3;
+}
+
