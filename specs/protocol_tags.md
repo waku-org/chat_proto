@@ -34,7 +34,7 @@ Tagging acts as a reference to the protocol specification that defines the paylo
 As each payload contains a link to the associated specification, clients can decode the message accordingly. 
 
 To accomplish this the wire format includes two different Identifiers. 
-1. domain: the governing body who oversees tag registration.
+1. registry: the maintaining organization of the specification.
 2. tag: which specification defines this payload type.
 
 ### Tags
