@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package umbra.base;
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SDS Payloads
+///////////////////////////////////////////////////////////////////////////////
+
+message HistoryEntry {
+  string message_id = 1;        // Unique identifier of the SDS message, as defined in `Message`
+  bytes retrieval_hint = 2;     // Optional information to help remote parties retrieve this SDS 
+                                // message; For example, A Waku deterministic message hash or routing payload hash
+}
+
+message ReliabilityInfo {
+    int32 lamport_timestamp = 10;    
+    repeated HistoryEntry causal_history = 11;   
+    bytes bloom_filter = 12; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Payload Framing Messages
+///////////////////////////////////////////////////////////////////////////////
+
+
+// TODO: This also encompasses plaintexts, is there a better name?
+// Alternatives: ???
+
+message EncryptedBytes {
+
+    oneof encryption {
+        bytes encrypted_bytes=1;
+        Plaintext plaintext = 2;
+		Ecies ecies = 3;
+    }
+   
+    
+    message Ecies {
+        bytes encrypted_bytes=1;
+        bytes ephemeral_pubkey = 2;
+        bytes tag = 3;
+        
+    }
+
+    message Plaintext {
+        bytes payload=1;
+    }
+}
+
+
+message UmbraEnvelopeV1 {
+    
+    string conversation_hint = 1;
+    uint32 nonce = 2;           
+    
+    EncryptedBytes encrypted_bytes = 100;
+}
