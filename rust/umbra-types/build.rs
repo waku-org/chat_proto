@@ -1,0 +1,33 @@
+extern crate protoc_rust;
+
+use std::env;
+use std::path::PathBuf;
+
+fn get_proto_dir() -> PathBuf {
+    // protos are stored in ../../proto/
+    let mut proto_root_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+    proto_root_dir.pop();
+    proto_root_dir.pop();
+    proto_root_dir
+}
+
+fn main() {
+    let mut config = prost_build::Config::new();
+
+    // Create mod file to maintain import hierarchy 
+    config.include_file("mod.rs");
+
+
+    config.compile_protos(
+            &[
+                "proto/umbra/base.proto",
+                "proto/umbra/common_frames.proto",
+                "proto/umbra/encryption.proto",
+                "proto/umbra/conversations/inbox_v1.proto",
+                "proto/umbra/conversations/private_v1.proto",
+            ],
+            // set proto_path
+            &[get_proto_dir().to_str().unwrap()],
+        )
+        .unwrap();
+}
