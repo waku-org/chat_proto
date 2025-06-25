@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package umbra.convos.inbox;
+
+import "proto/umbra/conversations/private_v1.proto";
+
+
+// Specification: [TODO]
+
+message InboxV1Frame {
+    string recipient = 1;
+    string conversation_type = 2;
+    oneof params {
+        convos.private_v1.ConversationInvite_PrivateV1 invite_private_v1 = 10;
+    }
+}
