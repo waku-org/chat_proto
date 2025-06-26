@@ -402,7 +402,7 @@ dependencies = [
 
 [[package]]
 name = "umbra-types"
-version = "0.0.1-dev"
+version = "0.0.2-dev"
 dependencies = [
  "bytes 0.4.12",
  "prost",
