@@ -2,22 +2,42 @@ syntax = "proto3";
 
 package umbra.base;
 
+import "proto/umbra/encryption.proto";
 
 ///////////////////////////////////////////////////////////////////////////////
 // SDS Payloads
 ///////////////////////////////////////////////////////////////////////////////
 
 message HistoryEntry {
-  string message_id = 1;        // Unique identifier of the SDS message, as defined in `Message`
-  bytes retrieval_hint = 2;     // Optional information to help remote parties retrieve this SDS 
-                                // message; For example, A Waku deterministic message hash or routing payload hash
+    string message_id = 1;        // Unique identifier of the SDS message, as defined in `Message`
+    bytes retrieval_hint = 2;     // Optional information to help remote parties retrieve this SDS 
+                                  // message; For example, A Waku deterministic message hash or routing payload hash
+  }
+  
+  message ReliableBytes {
+      string message_id = 2;      
+      string channel_id = 3;  
+      int32 lamport_timestamp = 10;    
+      repeated HistoryEntry causal_history = 11;   
+      bytes bloom_filter = 12; 
+      optional bytes content = 20;
+  }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Encryption
+///////////////////////////////////////////////////////////////////////////////
+
+// TODO: This also encompasses plaintexts, is there a better name?
+// Alternatives: ???
+message EncryptedBytes {
+
+    oneof encryption {
+        encryption.Plaintext plaintext = 1;
+		encryption.Ecies ecies = 2;
+    }
 }
 
-message ReliabilityInfo {
-    int32 lamport_timestamp = 10;    
-    repeated HistoryEntry causal_history = 11;   
-    bytes bloom_filter = 12; 
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Payload Framing Messages
@@ -27,7 +47,7 @@ message ReliabilityInfo {
 message UmbraEnvelopeV1 {
     
     string conversation_hint = 1;
-    uint32 nonce = 2;           
+    uint64 salt = 2;           
     
-    bytes encrypted_bytes = 100;
+    bytes payload = 5;
 }

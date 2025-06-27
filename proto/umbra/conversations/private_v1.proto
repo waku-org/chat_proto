@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package umbra.convos.private_v1;
 
-import "proto/umbra/base.proto";
 import "proto/umbra/common_frames.proto";
 
 message ConversationInvite_PrivateV1 {
@@ -11,16 +10,16 @@ message ConversationInvite_PrivateV1 {
 }
 
 
-message PrivateV1Frame {
-    // SDS like information: Message ID and channel_id extracted for utility
-    string message_id = 2;                   
-    string conversation_id = 3;                  
-                                                                               
-    base.ReliabilityInfo reliability_info = 4;
+message Placeholder {
+    uint32 counter = 1;
+}
+
+message PrivateV1Frame {                 
+    string conversation_id = 1;                  
 
 	oneof frame_type {
 		common_frames.ContentFrame content = 10;
+        Placeholder placeholder = 11;
         // ....
 	}
 }
-
