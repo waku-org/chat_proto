@@ -28,9 +28,9 @@ fn main() {
             &[
                 "proto/umbra/base.proto",
                 "proto/umbra/common_frames.proto",
-                "proto/umbra/encryption.proto",
-                "proto/umbra/conversations/inbox_v1.proto",
                 "proto/umbra/conversations/private_v1.proto",
+                "proto/umbra/encryption.proto",
+                "proto/umbra/invite.proto",
             ],
             // set proto_path
             &[get_proto_dir().to_str().unwrap()],

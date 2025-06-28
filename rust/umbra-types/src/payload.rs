@@ -6,11 +6,8 @@ use prost::Message;
 pub use types::umbra::*;
 
 use crate::{
-    base::{EncryptedBytes, UmbraEnvelopeV1},
-    convos::{
-        inbox::{InboxV1Frame, inbox_v1_frame},
-        private_v1::{PrivateV1Frame, private_v1_frame},
-    },
+    base::{EncryptedBytes, InboxV1Frame, UmbraEnvelopeV1, inbox_v1_frame},
+    convos::private_v1::{PrivateV1Frame, private_v1_frame},
 };
 
 impl PrivateV1Frame {
