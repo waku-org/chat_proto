@@ -4,10 +4,6 @@ package umbra.convos.private_v1;
 
 import "proto/umbra/common_frames.proto";
 
-message ConversationInvite_PrivateV1 {
-    // TODO: update placeholder fields
-    string participants = 1;
-}
 
 
 message Placeholder {

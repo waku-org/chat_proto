@@ -13,12 +13,4 @@ message Ecies {
     bytes tag = 3;
 }
 
-// TODO: This also encompasses plaintexts, is there a better name?
-// Alternatives: ???
-message EncryptedBytes {
 
-    oneof encryption {
-        Plaintext plaintext = 1;
-		Ecies ecies = 2;
-    }
-}
