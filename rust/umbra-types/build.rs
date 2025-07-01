@@ -12,6 +12,8 @@ fn get_proto_dir() -> PathBuf {
     let mut proto_root_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
     proto_root_dir.pop();
     proto_root_dir.pop();
+    proto_root_dir.push("proto");
+    proto_root_dir.push("umbra");
 
     println!("proto_dir: {:?}", proto_root_dir);
     proto_root_dir
@@ -26,11 +28,11 @@ fn main() {
     config
         .compile_protos(
             &[
-                "proto/umbra/base.proto",
-                "proto/umbra/common_frames.proto",
-                "proto/umbra/conversations/private_v1.proto",
-                "proto/umbra/encryption.proto",
-                "proto/umbra/invite.proto",
+                "base.proto",
+                "common_frames.proto",
+                "conversations/private_v1.proto",
+                "encryption.proto",
+                "invite.proto",
             ],
             // set proto_path
             &[get_proto_dir().to_str().unwrap()],

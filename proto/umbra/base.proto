@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package umbra.base;
 
-import "proto/umbra/encryption.proto";
-import "proto/umbra/invite.proto";
+import "encryption.proto";
+import "invite.proto";
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -2,7 +2,8 @@ syntax = "proto3";
 
 package umbra.convos.private_v1;
 
-import "proto/umbra/common_frames.proto";
+import "common_frames.proto";
+
 
 
 
