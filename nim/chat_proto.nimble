@@ -1,5 +1,5 @@
 # Package
-
+packageName   = "chat_proto"
 version       = "0.1.0"
 author        = "jazzz"
 description   = "Type definitions for the chat protocol"
