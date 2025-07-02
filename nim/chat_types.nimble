@@ -5,7 +5,6 @@ author        = "jazzz"
 description   = "Type definitions for the chat protocol"
 license       = "MIT"
 srcDir        = "src"
-bin    = @["dev"]   # Remove
 
 # Dependencies
 requires "nim >= 2.0.14"
