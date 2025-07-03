@@ -28,11 +28,13 @@ fn main() {
     config
         .compile_protos(
             &[
-                "base.proto",
+                "envelope.proto",
                 "common_frames.proto",
                 "conversations/private_v1.proto",
                 "encryption.proto",
+                "inbox.proto",
                 "invite.proto",
+                "reliability.proto"
             ],
             // set proto_path
             &[get_proto_dir().to_str().unwrap()],

@@ -6,8 +6,10 @@ use prost::Message;
 pub use types::umbra::*;
 
 use crate::{
-    base::{EncryptedBytes, InboxV1Frame, UmbraEnvelopeV1, inbox_v1_frame},
     convos::private_v1::{PrivateV1Frame, private_v1_frame},
+    encryption::EncryptedPayload,
+    envelope::UmbraEnvelopeV1,
+    inbox::{InboxV1Frame, inbox_v1_frame},
 };
 
 impl PrivateV1Frame {
@@ -33,7 +35,7 @@ pub trait ToEnvelope {
     fn to_envelope(self, conversation_id: String, salt: u64) -> UmbraEnvelopeV1;
 }
 
-impl ToEnvelope for EncryptedBytes {
+impl ToEnvelope for EncryptedPayload {
     fn to_envelope(self, conversation_id: String, salt: u64) -> UmbraEnvelopeV1 {
         UmbraEnvelopeV1 {
             conversation_hint: conversation_id, // TODO
@@ -48,14 +50,18 @@ mod tests {
     use super::*;
     use prost::Message;
 
+    use crate::reliability::ReliablePayload;
+    use crate::common_frames::ContentFrame;
+
+
     #[test]
     fn test_private_v1_roundtrip() {
         let text = "Hello, World!".to_string();
 
         let msg = PrivateV1Frame {
             conversation_id: "conversationId".to_string(),
-            frame_type: Some(convos::private_v1::private_v1_frame::FrameType::Content(
-                common_frames::ContentFrame {
+            frame_type: Some(private_v1_frame::FrameType::Content(
+                ContentFrame {
                     domain: 0,
                     tag: 0,
                     bytes: text.encode_to_vec(),
@@ -63,21 +69,21 @@ mod tests {
             )),
         };
 
-        let reliable = base::ReliableBytes {
+        let reliable = ReliablePayload {
             message_id: "msg_id".into(),
             channel_id: msg.conversation_id.clone(),
             lamport_timestamp: 0,
             causal_history: vec![],
             bloom_filter: vec![1, 2, 3, 4],
-            content: Some(msg.encode_to_vec()),
+            content: msg.encode_to_vec(),
         };
 
         let buf = reliable.encode_to_vec();
 
-        let reliable_msg = base::ReliableBytes::decode(&*buf).unwrap();
+        let reliable_msg = ReliablePayload::decode(&*buf).unwrap();
 
         let msg_from_bytes =
-            convos::private_v1::PrivateV1Frame::decode(&*reliable_msg.content.unwrap())
+            PrivateV1Frame::decode(&*reliable_msg.content)
                 .expect("Failed to decode message");
 
         assert_eq!(
