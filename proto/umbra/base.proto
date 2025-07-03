@@ -35,7 +35,7 @@ message HistoryEntry {
       int32 lamport_timestamp = 10;    
       repeated HistoryEntry causal_history = 11;   
       bytes bloom_filter = 12; 
-      optional bytes content = 20;
+      bytes content = 20;
   }
 
 
