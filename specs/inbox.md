@@ -1,73 +1,68 @@
 ---
 title: INBOX
-name: Inbound messages  
+name: Inbound message queues
 category: Standards Track
 status: raw
 tags: chat
 editor: Jazz Alyxzander<jazz@status.im>
 contributors:
 ---
-## Abstract
+# Abstract
 
 
-## Background / Rationale / Motivation
+# Background / Rationale / Motivation
+Clients must be able to receive frames before conversations can be initialized. While its possible to coordinate a content topic out of band, that becomes limiting factor to growth. 
 
 
+# Theory / Semantics
 
-## Theory / Semantics
-
-Inboxes are inbound only conversation types, which allow a client to recieve messages from contacts. 
+Inboxes are inbound only conversation types, which allow a client to receive messages from contacts. 
 An inbox does not have a defined set of participants, and is used to receive messages when there does not exist and established channel between contacts. 
-All messages to an inbox MUST be encrypted. [TODO: Reason]
 
-### Accepted types
-Inboxes SHOULD attempt to handle all envelopes sent with the conversation_id `/inbox/v1/<inbox_address>`.
-
-### Default Inbox
-
-[Differentiate between Inbox the place you recieve and the  Protocol -- Is htere a difference]
-An inbox is the default conversation type. 
-It is a catch-all for all messages which 
+An inbox does not have an inherent keypair or identity associated with it - it's an agreed upon location to recieve messages. 
 
 
+## Creation
 
-[TODO: is domain separation needed here or should we save some bytes?]
+Inboxes do not need to be "created", and there is no required initialization. 
 
 
-**Encryption**
-
-All Frames sent to the INBOX must be encrypted.
-
-Frames CAN be encrypted
-
-**Content Topic**
+## Content Topic
 
 // TODO: Inbox Topics will be defined in ContactBundles, allowing for dynamic topic usage
-
 All clients must listen for messages posted with the content topic `/inbox/<inbox_address>`
 
-###  Invites 
-Conversations are required to define their own Invites, which contain the required information to bootstrap new participants.
 
 
-[TODO: InviteV1]
+## Accepted types
+
+
+
+## Encryption
+
+All Frames sent to the Inbox MUST be encrypted to maintain message confidentiality. 
+
+This protocol uses a [KN noise handshake](https://noiseexplorer.com/patterns/KN/) to secure inbound messages. 
+
+Recipients S,E is sent out of band. Messages sent in this manner do not benefit from sender authentication. Contents need to be validated prior to being trusted. 
+
+
+
+## Framing 
+
+[TODO: Is there benefit to using SDS in this case? If all messages are invites and communication occurs else where, is this just wasting bytes?]
+```mermaid 
+flowchart TD
+    UmbraEnvelopeV1 <--> EncryptedPayload
+    EncryptedPayload <--> D{En/Decrypt}
+    D <--> ReliableBytes
+    ReliableBytes --> InboxV1Frame
+
+```
 
 ### EncryptedBytes
 
 The EncryptedBytes message is a self-describing wrapper for all encrypted payloads. As the protocol grows it will include potentially different encryption mechanisms. This message type makes no assumptions about the encryption used an allows new conversation types to use the same messaging framework.
-
-
-[TODO: Why isn't this defined within the  conversation frames like SDS?]
-
-
-
-### Invites
-
-Individual Conversations are responsible for defining a payload which will be used to initialize remote participants.
-
-#### Invite Encryption 
-
-Invite
 
 
 
@@ -76,6 +71,13 @@ Invite
 The wire format is specified using protocol buffers v3.
 
 ```mermaid
+
+message InboxV1Frame {
+    string recipient = 1;
+    oneof frame_type {
+        ... supported invite types
+    }
+}
 
 message EncryptedBytes {
 
