@@ -11,6 +11,3 @@ suite "Type Encoding Tests":
     check x.message_id == decoded.message_id
     check x.retrieval_hint == decoded.retrieval_hint
     check x == decoded
-
-  test "Multiplication works":
-    check(2 * 3 == 6)
