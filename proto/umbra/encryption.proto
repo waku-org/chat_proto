@@ -22,5 +22,3 @@ message Ecies {
     bytes ephemeral_pubkey = 2;
     bytes tag = 3;
 }
-
-
