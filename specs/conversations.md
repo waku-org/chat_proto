@@ -44,7 +44,7 @@ A Conversation is an instance of a particular ConversationType which contains th
 
 ### ConversationIdentifiers
 
-A Conversation instance MUST a conversationd_id and the `conversation_id` MUST uniquely identify the conversation.
+A Conversation instance MUST a conversation_id and the `conversation_id` MUST uniquely identify the conversation.
 [TODO: Should more guidance be added later? e,g /<convo_type>/<version>/<ident>]
 
 
@@ -86,7 +86,7 @@ To mitigate this risk and provide a safer default for Conversation implementors,
 
 The wire format is specified using protocol buffers v3.
 
-```mermaid
+```protobuf
 
 message UmbraEnvelopeV1 {
     

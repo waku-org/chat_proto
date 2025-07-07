@@ -70,7 +70,7 @@ The EncryptedBytes message is a self-describing wrapper for all encrypted payloa
 ## Wire Format Specification / Syntax
 The wire format is specified using protocol buffers v3.
 
-```mermaid
+```protobuf
 
 message InboxV1Frame {
     string recipient = 1;
