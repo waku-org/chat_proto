@@ -17,12 +17,14 @@ Clients must be able to receive frames before conversations can be initialized. 
 # Theory / Semantics
 
 Inboxes are inbound only conversation types, which allow a client to receive messages from contacts. 
-An inbox does not have a defined set of participants, and is used to receive messages when there does not exist and established channel between contacts. 
+An inbox does not have a defined set of participants, and is used to receive messages when there is not an established channel between contacts. 
 
 An inbox does not have an inherent keypair or identity associated with it - it's an agreed upon location to recieve messages. 
 
 
-## Creation
+## Inbox Identifiers
+
+Inboxes are Identified by a 
 
 Inboxes do not need to be "created", and there is no required initialization. 
 
@@ -31,6 +33,8 @@ Inboxes do not need to be "created", and there is no required initialization.
 
 // TODO: Inbox Topics will be defined in ContactBundles, allowing for dynamic topic usage
 All clients must listen for messages posted with the content topic `/inbox/<inbox_address>`
+
+`lower_hex(hash(/inbox/<inbox_address>)`
 
 
 
@@ -42,11 +46,35 @@ All clients must listen for messages posted with the content topic `/inbox/<inbo
 
 All Frames sent to the Inbox MUST be encrypted to maintain message confidentiality. 
 
-This protocol uses a [KN noise handshake](https://noiseexplorer.com/patterns/KN/) to secure inbound messages. 
+This protocol uses a reversed variant of the [KN noise handshake](https://noiseexplorer.com/patterns/KN/) to secure inbound messages.
 
-Recipients S,E is sent out of band. Messages sent in this manner do not benefit from sender authentication. Contents need to be validated prior to being trusted. 
+ ```noise
+KNfallback:
+  <- e, s
+  ...
+  -> e, ee, es	
+ ```
 
+In this case the responder provides both `s` and `e` out of band. 
 
+The handshakes primary purpose is to provide sender confidentiality, with some forward secrecy. The handshake is similar to a one way N handshake with a recipient side ephemeral key.   
+
+Note this channel does not not provide sender authentication, and should only be used to implement a confidential message delivery with some forward secrecy. This limitation is intentional to maintain O-RTT encryption. As this is an inbound pathway further messages to establish mutual authentication with identity hiding would be wasteful. 
+
+### Ciphersuite
+
+The noise handshake is implemented with the following functions:
+
+**DH:** X25519
+**cipher:** AEAD_CHACHA20_POLY1305 
+**hash:** BLAKE2s 
+
+The noise protocol name would then be `Noise_KNfallback_25519_ChaChaPoly_BLAKE2s`
+
+This protocol opts for 32bit variants to optimize for mobile and resource constrained environments.
+
+### Endianness
+[TODO: The Noiseprotocol specification recommends BigEndian length fields - Need to define if this protocol will deviate]
 
 ## Framing 
 
@@ -111,7 +139,7 @@ if available, point to existing implementations for reference.
 
 
 ## Security/Privacy Considerations
-
+The encryption scheme used does not provide any sender authentication. Messages sent over this pathway need to validate the sender before trusting any of the contents. 
 
 ## Copyright
 
