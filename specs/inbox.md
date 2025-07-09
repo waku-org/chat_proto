@@ -16,13 +16,16 @@ Clients must be able to receive frames before conversations can be initialized. 
 
 # Theory / Semantics
 
-Inboxes are inbound only conversation types, which allow a client to receive messages from contacts. 
+Inboxes are inbound only conversation types, which allow a client to receive messages from contacts asynchronously. 
 An inbox does not have a defined set of participants, and is used to receive messages when there is not an established channel between contacts. 
 
 An inbox does not have an inherent keypair or identity associated with it - it's an agreed upon location to receive messages. 
 
 Inboxes are not exclusive to a single account, and can be used by many different accounts. It is expected  
 
+## Parameters 
+
+- **inbox_address:** uniquely identifies the inbox.
 
 ## Invitations / Initialization
 
@@ -30,21 +33,13 @@ Inboxes do not require coordination with other clients because they are inbound 
 
 However to receive messages at this inbox, remote clients must know this is a valid place to receive messages. This can be statically defined in a conversation protocol or communicated out of band.
 
-## Inbox Identifiers
-
-Inboxes are Identified by a 
-
-Inboxes do not need to be "created", and there is no required initialization. 
-
 
 ## Content Topic Usage
 
-// TODO: Inbox Topics will be defined in ContactBundles, allowing for dynamic topic usage
-All clients must listen for messages posted with the content topic `/inbox/<inbox_address>`
+All clients must listen for messages posted with the content topic. The content topic that is used is defined by `lower_hex(blake2s("/inbox/<inbox_address>"))`. 
 
-`lower_hex(hash(/inbox/<inbox_address>)`
-
-
+## Conversation Id
+Messages sent to the inbox MUST use the conversation_id = `/inbox/v1/<inbox_address>`
 
 ## Accepted types
 
