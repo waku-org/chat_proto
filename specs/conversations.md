@@ -37,7 +37,7 @@ A ConversationType MUST define how to generate conversation_ids
 
 A ConversationType SHOULD define membership requirements and limitations.
 A ConversationType SHOULD define privacy and security guarantees.
-
+A ConversationType SHOULD maintain a deterministic decoding tree.
 
 ## ConversationType Identifiers
 ConversationTypes are identified by the title of the specification. This allows developers to lookup the associated specification.
@@ -60,9 +60,7 @@ Care should be taken to ensure that conversation_ids do not conflict.
 To disambiguate between different logical layers, payload types sent by a Conversation are referred to as `Frames`.
 Conversations are free to determine which frames are needed for their specific use cases.
 
-ConversationTypes MUST define a section which defines all possible frames 
 
-ConversationTypes SHOULD maintain a deterministic decoding tree.
 
 
 ## Encryption
@@ -76,15 +74,6 @@ Content topics are how ConversationTypes define where an how messages are discov
 When developing new ConversationTypes contributors should consider:
 - Privacy impacts of the chosen topic policy.
 - Channel binding and the impacts on message security.
-
-
-
-## Implementation Suggestions (optional)
-An optional *implementation suggestions* section may provide suggestions on how to approach implementation details, and, 
-if available, point to existing implementations for reference.
-
-
-## (Further Optional Sections)
 
 
 ## Security/Privacy Considerations
