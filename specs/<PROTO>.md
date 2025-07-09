@@ -75,7 +75,7 @@ Conversation_ids are sufficient to allow clients to lookup the required encrypti
 
 Messages with an unknown hint can be safely disregarded.
 
-ConversationHints are computed by using a salted hash of the `conversationId`. specifically defined as `lowercase_hex(blake2s(conversation_id))`
+ConversationHints are computed by using a salted hash of the `conversationId`. specifically defined as `lowercase_hex(blake2s(salt || conversation_id))`
 [TODO: Should conversations define their own hinting?] 
 
 
@@ -91,7 +91,7 @@ message UmbraEnvelopeV1 {
     string conversation_hint = 1;
     uint32 salt = 2;           
     
-    EncryptedBytes encrypted_bytes = 10;
+    EncryptedBytes encrypted_bytes = 3;
 }
 
 
@@ -100,16 +100,19 @@ message UmbraEnvelopeV1 {
 ## Implementation Suggestions (optional)
 
 ### User level Conversations
-A ConversationType defines how to send and receive messages. Developer SHOULD mask the conversationType from users. Developers should use an independent identifier in their apps for user-level "conversations" so that the protocols can update freely. 
+
+Application developers should maintain standalone identifiers for user-level conversations that are separate from the protocol-level conversation_id. A single logical conversation from the user's perspective may utilize multiple ConversationTypes over time. As versions are considered different types, the underlying relationship is many to one. By maintaining application-level conversation identifiers, developers can provide users with consistent conversation continuity while the underlying protocol mechanisms handle version transitions and security upgrades transparently.
+
 
 ## (Further Optional Sections)
 
 
 ## Security/Privacy Considerations
 
-Messages sent to the default inbox are linkable to an client (as it is derived from the clients address). This means that if a target client address is known to an observer, they can determine if any messages were sent to the target using the default inbox.  In this case the Envelopes contain no sender information, so this does not leak social graph information.
-
 Messages inherit the privacy and security properties of the ConversationType used to send them. Please refer to the corresponding specifications when analyzing properties. 
+
+### Default Inbox Privacy
+Messages sent to the default inbox are linkable to an client (as it is derived from the clients address). This means that if a target client address is known to an observer, they can determine if any messages were sent to the target using the default inbox.  In this case the Envelopes contain no sender information, so this does not leak social graph information.
 
 ## Copyright
 
