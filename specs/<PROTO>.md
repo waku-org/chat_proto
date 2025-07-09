@@ -17,17 +17,13 @@ Traditionally communication protocols face several critical challenges as they g
 
 Different communication scenarios have vastly different requirements. A protocol optimized for high-volume public broadcasts performs poorly for intimate encrypted conversations, and vice versa. Monolithic protocols cannot optimize for these diverse use cases simultaneously. 
 
-Once widely deployed, communication protocols become difficult to modify. Even minor changes can break compatibility across clients, leading to protocol stagnation and eventually ossification. 
+Once widely deployed, communication protocols become difficult to modify. Even minor changes can break compatibility across clients. As a result versioning becomes a complex negotiation problem, which makes deploying protocol updates difficult. At each stage protocols become increasingly difficult to modify, which slows down forward progress and eventually leads to ossification. 
 
-When decentralized protocols do attempt to evolve, versioning becomes a complex negotiation problem. Clients must maintain backward compatibility with multiple protocol versions, leading to bloated implementations and coupling which increases complexity.
-
-At each stage protocols become increasingly difficult to modify, which slows down forward progress.
-
-A preferred approach would be to practice resiliency at the protocol level by focusing on versioning from the beginning.
+A preferred approach would be to practice resiliency at the protocol level by focusing on versioning from the beginning. 
 
 # Theory / Semantics
 
-This protocol is a lean coordination layer which provides the backbone for smaller independent "Conversation" sub-protocols. Conversation protocols completely define a pathway for communication. This root protocol provides common functionality to support a wide array of communication use cases. 
+This protocol is a lean coordination layer which provides the backbone for smaller independent "Conversation" sub-protocols. Conversation protocols completely define a pathway for communication. This root protocol provides common functionality to support a wide array of communication use cases, and the remaining functionality is deferred to Conversation protocols to define.
 
 ```mermaid
 flowchart TD
@@ -37,17 +33,22 @@ flowchart TD
     style C3 fill:#FFFFFF,stroke:#,stroke-width:1px,stroke-dasharray: 5 1
 ```
 
-This protocol is intentionally light, as the work is deferred to the actual conversation protocols.
+## Conversations 
+ConversationTypes are standalone methods to send and receive messages. While a full service "chat" protocol needs to provide additional features such as identity management, message history, backups and versioning, conversations are more narrowly scoped.
+
+They can be created permissionlessly within the %PROTO, as there is no required registration. Developers are free to use any given conversation type as long as all intended participants support it.
+
+ConversationTypes MUST adhere to the [Conversations](./conversations.md) specification in order to maintain compatibility, however network adoption is not a requirement.
+
+
 
 ## Versioning
 
-Incompatible versions of a conversation protocol result in distinct conversationTypes (E.g. PrivateV1 vs PrivateV3). Individual conversationTypes can implement functionality to migrate participants to a conversation. By making this a conversationType issue, different use cases can choose a system that works for them. 
+Incompatible versions of a conversation protocol result in distinct conversationTypes (E.g. PrivateV1 vs PrivateV3). The opinionated strategy is to allow multiplexing at the conversation level, rather than requiring the entire network of clients to run the same version. 
 
+Individual conversationTypes can implement functionality to migrate participants to a conversation, but that is deferred to contributors. By making this a conversationType issue, different use cases can choose a system that works for them. 
 
-## Conversations 
-Conversations can be created permissionlessly within the %PROTO, as there is no required registration. Developers are free to use any given conversation type as long as all intended participants support it.
-
-ConversationTypes MUST adhere to the [Conversations](./conversations.md) specification in order to maintain compatibility, however network adoption is not q requirement.
+Developers wishing to interop with other projects will need to ensure they have overlapping support of ConversationTypes.
 
 
 ## Default Inbox
