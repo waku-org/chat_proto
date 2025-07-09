@@ -9,7 +9,7 @@ contributors:
 ---
 # Abstract
 
-This specification outlines the base message structure for the Conversations protocol. 
+This specification outlines the requirements for defining a ConversationType
 
 # Background / Rationale / Motivation
 
@@ -21,83 +21,63 @@ The Conversations Protocol addresses this gap by defining a mechanism to establi
 
 # Theory / Semantics
 
-[TODO: remove this link, by summarizing and embedding in the spec so its standalone]
-This is a lightweight framework for defining Conversation micro-protocols.
-The high level Conversations approach outlined [here](https://forum.vac.dev/t/chatsdk-conversations/509). 
-The intention is to provide the minimal building blocks for a wide range of micro-protocols, while allowing ConversationTypes to remain as flexible as possible. 
-
-At a high level this Protocol defines what a ConversationType is, it's requirements, and a mechanism for initializing Conversations with others. 
-
-**Frame**: 
-
-## Conversations
 A ConversationType is a specification which defines a method for clients to communicate.
 Each ConversationType defines its own encryption, encoding, and message types which are necessary for operation.   
 
-A ConversationType MUST define which content topics are valid places to receive messages.
-A ConversationType MUST define which encryption scheme is used
-A ConversationType MUST define which Frames are valid. 
-- Clients MUST be able to decode frames deterministically. 
-A ConversationType SHOULD define membership requirements and limitations.
-
 A Conversation is an instance of a particular ConversationType which contains the associated state such as membership, encryption parameters, names etc.  
 
-### ConversationIdentifiers
+## Requirements
+To be considered valid, every ConversationType specification is required to define the operation completely. 
 
-A Conversation instance MUST a conversation_id and the `conversation_id` MUST uniquely identify the conversation.
-[TODO: Should more guidance be added later? e,g /<convo_type>/<version>/<ident>]
+A ConversationType MUST define which encryption scheme is used
+A ConversationType MUST define which Frames are used.
+A ConversationType MUST define which encoding is used.
+A ConversationType MUST define which content topics are valid places to receive messages.
+A ConversationType MUST define how to generate conversation_ids
+
+A ConversationType SHOULD define membership requirements and limitations.
+A ConversationType SHOULD define privacy and security guarantees.
 
 
-## Default Inbox
-The default inbox allows clients to discover new conversations asynchronously without prior coordination. By listening in a static location
+## ConversationType Identifiers
+ConversationTypes are identified by the title of the specification. This allows developers to lookup the associated specification.
 
+[TODO: This doesn't make any sense, as its been mentioned that new versions of a conversationType are distinct types. Which is it? ]
 
-To achieve this all clients MUST implement a default Inbox with `inbox_address = HASH(client_address)`. [TODO: Define hash here, or embed as part of the Inbox spec]
-See [Inbox](./inbox.md) for more information.
+E.g. inbox.md -> InboxV1
 
+## Conversation Identifiers
 
-As the clients address is directly linked to the content_topic there is some metadata leakage, and this pathway SHOULD only be used as a last resort.    
+conversation_ids allow for the efficient lookup of encryption state. 
+
+Care should be taken to ensure that conversation_ids do not conflict.
+[TODO: Should more guidance be added later? e,g  mandating a format to ensure uniqueness between conversationTypes -- /<convo_name>/<version>/<ident>]
+
+[TODO: touch on the nuance of generating conversation_ids from participant lists?]
+
 
 ## Framing
 To disambiguate between different logical layers, payload types sent by a Conversation are referred to as `Frames`.
+Conversations are free to determine which frames are needed for their specific use cases.
 
-Conversations are free to determine which frames are needed for their specific use cases, with these caveats:
-- The outer most frame MUST be wrapped in an UmbraEnvelope.
-- All frames MUST be able to be decoded deterministically. [TODO: Unambiguously a better choice?]
+ConversationTypes MUST define a section which defines all possible frames 
 
-Deterministic decoding means that clients can always classify a envelope as 1 of 3 states: Readable, BadlyFormed, Addressed to someone else.
- 
-
-### Conversation Hinting
-[TODO: Needs lots of work]
-
-UmbraEnvelopes enable deterministic decoding by containing a reference to the conversation which this message belongs. Clients only accepts envelopes with known `conversation_hints's`. All others can be discarded as there is insufficient information to properly decrypt/decode the messages.
- 
-
-Conversation identifiers (conversation_id) have the potential to leak sensitive metadata if exposed in cleartext. Frames sharing the same conversation_id could allow observers to infer social graph relationships, user activity patterns, or conversation linkage, depending on how conversation_id values are used by the specific ConversationType.
-
-To mitigate this risk and provide a safer default for Conversation implementors, conversation_id values SHOULD be obscured in a way that prevents observers from linking frames belonging to the same conversation.
-
-[TODO: Ratcheting Private Identifiers]
+ConversationTypes SHOULD maintain a deterministic decoding tree.
 
 
-
-## Wire Format Specification / Syntax
-
-The wire format is specified using protocol buffers v3.
-
-```protobuf
-
-message UmbraEnvelopeV1 {
-    
-    string conversation_hint = 1;
-    uint32 salt = 2;           
-    
-    EncryptedBytes encrypted_bytes = 10;
-}
+## Encryption
+Conversation types are free to choose which ever encryption mechanism works best for their application. 
+[TODO: Expand on recomendations]
 
 
-```
+## Content Topics
+Content topics are how ConversationTypes define where an how messages are discovered by participants. 
+
+When developing new ConversationTypes contributors should consider:
+- Privacy impacts of the chosen topic policy.
+- Channel binding and the impacts on message security.
+
+
 
 ## Implementation Suggestions (optional)
 An optional *implementation suggestions* section may provide suggestions on how to approach implementation details, and, 
@@ -109,10 +89,7 @@ if available, point to existing implementations for reference.
 
 ## Security/Privacy Considerations
 
-Messages sent to the default inbox are linkable to an client (as it is derived from the clients address). This means that if a target client address is known to an observer, they can determine if any messages were sent to the target using the default inbox.  In this case the Envelopes contain no sender information, so this does not leak social graph information.
-
-Messages sent via different pathways would have their own privacy guarantees.
-
+This approach puts heavy requirements on ConversationTypes to build their own cryptography without providing much guidance. Finding mechanisms that provide safety while maintaining the flexibility should be prioritized in follow up work.
 
 ## Copyright
 
