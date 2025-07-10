@@ -1,0 +1,14 @@
+{
+    "name": "UmbraTypes",
+    "image": "nimlang/nim",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "NimLang.nimlang", //Nim lang extension
+                "vadimcn.vscode-lldb", //for Nim debug
+                "streetsidesoftware.code-spell-checker" //spell checker
+            ]
+        }
+    },
+    "postCreateCommand": "./.devcontainer/post_create.sh"
+}

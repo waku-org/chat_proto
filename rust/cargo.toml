@@ -1,0 +1,18 @@
+[workspace]
+
+members = [
+    "umbra-types"
+]
+
+default-members = [
+    "umbra-types"
+]
+
+resolver = "3"
+
+[workspace.package]
+version = "0.0.1-dev"
+
+[workspace.dependencies]
+
+
