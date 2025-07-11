@@ -7,7 +7,7 @@ package umbra.envelope;
 // Payload Framing Messages
 ///////////////////////////////////////////////////////////////////////////////
 
-message UmbraEnvelopeV1 {
+message WapEnvelopeV1 {
     
     string conversation_hint = 1;
     uint64 salt = 2;           
