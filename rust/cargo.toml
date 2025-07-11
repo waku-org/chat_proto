@@ -1,11 +1,11 @@
 [workspace]
 
 members = [
-    "umbra-types"
+    "wap-types"
 ]
 
 default-members = [
-    "umbra-types"
+    "wap-types"
 ]
 
 resolver = "3"

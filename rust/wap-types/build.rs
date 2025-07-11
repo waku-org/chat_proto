@@ -13,7 +13,7 @@ fn get_proto_dir() -> PathBuf {
     proto_root_dir.pop();
     proto_root_dir.pop();
     proto_root_dir.push("proto");
-    proto_root_dir.push("umbra");
+    proto_root_dir.push("wap");
 
     println!("proto_dir: {:?}", proto_root_dir);
     proto_root_dir

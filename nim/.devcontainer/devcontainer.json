@@ -1,5 +1,5 @@
 {
-    "name": "UmbraTypes",
+    "name": "WapTypes",
     "image": "nimlang/nim",
     "customizations": {
         "vscode": {

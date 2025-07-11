@@ -3,12 +3,12 @@ pub mod types {
 }
 
 use prost::Message;
-pub use types::umbra::*;
+pub use types::wap::*;
 
 use crate::{
     convos::private_v1::{PrivateV1Frame, private_v1_frame},
     encryption::EncryptedPayload,
-    envelope::UmbraEnvelopeV1,
+    envelope::WapEnvelopeV1,
     inbox::{InboxV1Frame, inbox_v1_frame},
 };
 
@@ -32,12 +32,12 @@ impl InboxV1Frame {
 }
 
 pub trait ToEnvelope {
-    fn to_envelope(self, conversation_id: String, salt: u64) -> UmbraEnvelopeV1;
+    fn to_envelope(self, conversation_id: String, salt: u64) -> WapEnvelopeV1;
 }
 
 impl ToEnvelope for EncryptedPayload {
-    fn to_envelope(self, conversation_id: String, salt: u64) -> UmbraEnvelopeV1 {
-        UmbraEnvelopeV1 {
+    fn to_envelope(self, conversation_id: String, salt: u64) -> WapEnvelopeV1 {
+        WapEnvelopeV1 {
             conversation_hint: conversation_id, // TODO
             salt,
             payload: self.encode_to_vec(), // Avoid allocation here?

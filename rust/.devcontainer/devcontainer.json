@@ -1,5 +1,5 @@
 {
-	"name": "Rust-UmbraTypes",
+	"name": "Rust-WapTypes",
 	"image": "mcr.microsoft.com/devcontainers/rust:latest",
 	"customizations": {
 		"vscode": {

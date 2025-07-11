@@ -1,6 +1,6 @@
 pub mod payload;
 
-pub use payload::types::umbra::*;
+pub use payload::types::wap::*;
 
 #[cfg(test)]
 

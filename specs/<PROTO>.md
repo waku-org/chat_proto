@@ -1,5 +1,5 @@
 ---
-title: <PROTO>>
+title: Waku Application Protocol
 name: A private decentralized messaging protocol for multiple usecases.
 category: Standards Track
 status: raw
@@ -56,7 +56,6 @@ There exists a circular dependency in initializing a Conversation. Conversations
 
 To resolve this all clients MUST implement a default [Inbox](./inbox.md) to receive initial messages. The default inbox allows clients to discover new conversations asynchronously without prior coordination. By listening in a static location.
 
-
 The default inbox MUST be configured with the parameters:
 - **inbox_addr:** `client_address`
 - **discriminator:** "default"
@@ -86,7 +85,7 @@ The wire format is specified using protocol buffers v3.
 
 ```protobuf
 
-message UmbraEnvelopeV1 {
+message WapEnvelopeV1 {
     
     string conversation_hint = 1;
     uint32 salt = 2;           
